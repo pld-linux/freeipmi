@@ -1,6 +1,19 @@
 # TODO
 #  - split based on provided spec.in: devel, fish, utils ?
 #  - additional split by requires/services (watchdog)
+#  - file /usr/share/man/man1/sensors.1.gz from install of freeipmi-0.1.3-0.5 conflicts with file from package lm_sensors-2.
+#  - wtf is this?
+# # bmc-config
+#>>--:>  >>--:>  >>--:> >>--:>
+#~ ~   Cat ate the fish!!  ~ ~
+#>>--:>  >>--:>  >>--:> >>--:>
+#Fish Exception (gh_standard_handler dump):
+#tag        : 
+#throw args : 
+#data       : [/usr/share/fish/extensions/sensors.scm]
+#misc-error(#f %s %S (no such module (srfi srfi-13)) #f)No backtrace
+#available.
+# dig: http://www.google.com/search?q=srfi&ie=UTF-8&oe=UTF-8
 Summary:	GNU FreeIPMI
 Name:		freeipmi
 Version:	0.1.3
@@ -11,6 +24,7 @@ Source0:	ftp://ftp.californiadigital.com/pub/freeipmi/download/0.1.3/%{name}-%{v
 # Source0-md5:	c4b088f806253971759c60263722e63d
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	guile-devel
+BuildRequires:	readline-devel >= 4.0
 #BuildRequires:	autoconf >= 2.50
 #BuildRequires:	automake
 #BuildRequires:	libltdl-devel
