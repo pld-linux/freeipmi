@@ -1,5 +1,10 @@
 # TODO
 #  - split based on provided spec.in: devel, fish, utils ?
+#    still not sure about how to split packages. move -libs to main
+#    and programs to -utils? or leave as it is? (but package init.d
+#    scripts separately?). -libs contains /var/lib/%{name} (because
+#    that .so needs to read ipckey inode), so one vote for discarding
+#    -libs?
 #  - additional split by requires/services (watchdog)
 #  - file /usr/share/man/man1/sensors.1.gz from install of freeipmi-0.1.3-0.5 conflicts with file from package lm_sensors-2.
 #  - wtf is this?
@@ -18,22 +23,21 @@ Summary:	GNU FreeIPMI - system management software
 Summary(pl):	GNU FreeIPMI - oprogramowanie do zarz±dzania systemem
 Name:		freeipmi
 Version:	0.1.3
-Release:	0.5
+Release:	0.11
 License:	GPL
 Group:		Applications/System
 Source0:	ftp://ftp.californiadigital.com/pub/freeipmi/download/0.1.3/%{name}-%{version}.tar.gz
 # Source0-md5:	c4b088f806253971759c60263722e63d
+Patch0:		%{name}-am.patch
 URL:		http://www.gnu.org/software/freeipmi/
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	guile-devel
 BuildRequires:	readline-devel >= 4.0
-#BuildRequires:	autoconf >= 2.50
-#BuildRequires:	automake
-#BuildRequires:	libltdl-devel
-#BuildRequires:	libtool
-#Obsoletes:	ipmitool-devel
+BuildRequires:	libtool
+Requires:		%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-# XXX don't translate before subpackages are done
 %description
 The GNU FreeIPMI system provides "Remote-Console" (out-of-band) and
 "System Management Software" (in-band) based on IPMI v1.5/2.0
@@ -49,20 +53,29 @@ specification. This project includes:
 - IPMI Ping (ipmiping)
 - RMCP Ping (rmcpping)
 
-#%package fish
-#Summary:	FreeIPMI Shell
-#Group:		Applications/System
-#Requires:	%{name} = %{version}-%{release}
-#
-#%description fish
-#Fish provides Shell, Extension/Plug-in and scripting interface. As a
-#shell, User has access to both in-band and out-of-band access to the
-#host BMC through a rich set of IPMI commands.
+%package fish
+Summary:	FreeIPMI Shell
+Group:		Applications/System
+Requires:	%{name} = %{version}-%{release}
+Requires:	scsh
+
+%description fish
+Fish provides Shell, Extension/Plug-in and scripting interface. As a
+shell, User has access to both in-band and out-of-band access to the
+host BMC through a rich set of IPMI commands.
+
+%package libs
+Summary:	Shared libraries for FreeIPMI
+Group:		Development/Libraries
+
+%description libs
+Shared libraries for FreeIPMI
 
 %package devel
 Summary:	Development package for FreeIPMI
 Summary(pl):	Pakiet programistyczny FreeIPMI
 Group:		Development/Libraries
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 Development package for FreeIPMI. This package includes the FreeIPMI
@@ -85,8 +98,13 @@ Statyczna biblioteka FreeIPMI.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
+%{__aclocal}
+%{__autoconf}
+%{__autoheader}
+%{__automake}
 %configure
 
 %{__make}
@@ -98,15 +116,14 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 # TODO: patch Makefile.am instead
-# install script to /etc/rc.d/init.d not /etc/init.d
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/freeipmi
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post 	-p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post 	libs -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
@@ -114,21 +131,17 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/ipmi-over-ts2000.texi
 %doc DISCLAIMER.*
 %attr(754,root,root) /etc/rc.d/init.d/bmc-watchdog
-%dir /var/lib/freeipmi
-/var/lib/freeipmi/ipckey
-%dir /var/log/freeipmi
 %attr(755,root,root) %{_sbindir}/rmcpping
 %attr(755,root,root) %{_sbindir}/ipmiping
 %attr(755,root,root) %{_sbindir}/ipmipower
 %attr(755,root,root) %{_sbindir}/bmc-watchdog
-%attr(755,root,root) %{_libdir}/libfreeipmi.so.1.0.0
-%{_datadir}/fish/extensions
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 %{_infodir}/freeipmi.info*
+%dir /var/log/freeipmi
 
-#%files fish
-#%defattr(644,root,root,755)
+%files fish
+%defattr(644,root,root,755)
 %dir %{_sysconfdir}/fish
 %config(noreplace) %{_sysconfdir}/fish/sensors-conf.scm
 %config(noreplace) %{_sysconfdir}/fish/fish.scm
@@ -138,7 +151,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/sel
 %attr(755,root,root) %{_sbindir}/sensors
 %dir %{_datadir}/fish
+%{_datadir}/fish/extensions
 %{_mandir}/man1/*
+
+%files libs
+%defattr(644,root,root,755)
+%dir /var/lib/freeipmi
+/var/lib/freeipmi/ipckey
+%{_libdir}/libfreeipmi.so.1.*.*
 
 %files devel
 %defattr(644,root,root,755)
