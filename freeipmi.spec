@@ -33,9 +33,9 @@ URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	guile-devel
-BuildRequires:	readline-devel >= 4.0
 BuildRequires:	libtool
-Requires:		%{name}-libs = %{version}-%{release}
+BuildRequires:	readline-devel >= 4.0
+Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -53,6 +53,21 @@ specification. This project includes:
 - IPMI Ping (ipmiping)
 - RMCP Ping (rmcpping)
 
+%description -l pl
+System GNU FreeIPMI dostarcza "zdaln± konsolê" (Remote-Console) oraz
+"oprogramowanie do zarz±dzania systemem" (System Management Software)
+oparte na specyfikacji IPMI v1.5/2.0. Projekt zawiera:
+- KCS, SMIC, SSIF, sterowniki LAN i bibliotekê C (libfreeipmi)
+- pow³okê FreeIPMI SHell (fish)
+- demona watchdog (bmc-watchdog)
+- czujniki (sensors)
+- dziennik zdarzeñ systemowych (sel - System Event Log)
+- narzêdzie informacyjne BMC (bmc-info)
+- narzêdzie konfiguracyjne BMC (bmc-config)
+- narzêdzie IPMI Power (ipmipower)
+- ping dla IPMI (ipmiping)
+- ping dla RMCP (rmcpping)
+
 %package fish
 Summary:	FreeIPMI Shell
 Group:		Applications/System
@@ -64,12 +79,21 @@ Fish provides Shell, Extension/Plug-in and scripting interface. As a
 shell, User has access to both in-band and out-of-band access to the
 host BMC through a rich set of IPMI commands.
 
+%description fish -l pl
+Fish dostarcza pow³okê oraz interfejs rozszerzeñ/wtyczek i skryptów.
+Jako pow³oka daje u¿ytkownikowi dostêp do czê¶ci in-band jak i
+out-of-band systemowego BMC poprzez bogaty zestaw poleceñ IPMI.
+
 %package libs
 Summary:	Shared libraries for FreeIPMI
-Group:		Development/Libraries
+Summary(pl):	Biblioteki wspó³dzielone FreeIPMI
+Group:		Libraries
 
 %description libs
-Shared libraries for FreeIPMI
+Shared libraries for FreeIPMI.
+
+%description libs -l pl
+Biblioteki wspó³dzielone FreeIPMI.
 
 %package devel
 Summary:	Development package for FreeIPMI
