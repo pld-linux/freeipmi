@@ -14,7 +14,8 @@
 #misc-error(#f %s %S (no such module (srfi srfi-13)) #f)No backtrace
 #available.
 # dig: http://www.google.com/search?q=srfi&ie=UTF-8&oe=UTF-8
-Summary:	GNU FreeIPMI
+Summary:	GNU FreeIPMI - system management software
+Summary(pl):	GNU FreeIPMI - oprogramowanie do zarz±dzania systemem
 Name:		freeipmi
 Version:	0.1.3
 Release:	0.5
@@ -60,19 +61,27 @@ specification. This project includes:
 
 %package devel
 Summary:	Development package for FreeIPMI
+Summary(pl):	Pakiet programistyczny FreeIPMI
 Group:		Development/Libraries
 
 %description devel
 Development package for FreeIPMI. This package includes the FreeIPMI
-header files and static libraries.
+header files.
+
+%description devel -l pl
+Pakiet programistyczny FreeIPMI. Zawiera pliki nag³ówkowe.
 
 %package static
 Summary:	Static FreeIPMI library
+Summary(pl):	Statyczna biblioteka FreeIPMI
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 Static FreeIPMI library.
+
+%description static -l pl
+Statyczna biblioteka FreeIPMI.
 
 %prep
 %setup -q
@@ -89,8 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 # TODO: patch Makefile.am instead
+# install script to /etc/rc.d/init.d not /etc/init.d
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/freeipmi
-rm -f $RPM_BUILD_ROOT%{_datadir}/info/dir
+rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -103,20 +113,19 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/BUGS NEWS TODO AUTHORS README ChangeLog
 %doc doc/ipmi-over-ts2000.texi
 %doc DISCLAIMER.*
-%{_sysconfdir}/init.d/bmc-watchdog
+%attr(754,root,root) /etc/rc.d/init.d/bmc-watchdog
 %dir /var/lib/freeipmi
 /var/lib/freeipmi/ipckey
 %dir /var/log/freeipmi
-%{_libdir}/libfreeipmi.so.1.0.0
-%{_libdir}/libfreeipmi.so.1
 %attr(755,root,root) %{_sbindir}/rmcpping
 %attr(755,root,root) %{_sbindir}/ipmiping
 %attr(755,root,root) %{_sbindir}/ipmipower
 %attr(755,root,root) %{_sbindir}/bmc-watchdog
+%attr(755,root,root) %{_libdir}/libfreeipmi.so.1.0.0
 %{_datadir}/fish/extensions
 %{_mandir}/man5/*
 %{_mandir}/man8/*
-%{_datadir}/info/freeipmi.info.*
+%{_infodir}/freeipmi.info*
 
 #%files fish
 #%defattr(644,root,root,755)
@@ -135,9 +144,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc doc/examples/
 %doc doc/{ipmi-network-layout.fig,freeipmi-hackers-intro.sxi}
-%{_includedir}/freeipmi
+%attr(755,root,root) %{_libdir}/libfreeipmi.so
 %{_libdir}/libfreeipmi.la
-%{_libdir}/libfreeipmi.so
+%{_includedir}/freeipmi
 
 %files static
 %defattr(644,root,root,755)
