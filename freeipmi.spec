@@ -5,11 +5,12 @@ Summary:	GNU FreeIPMI
 Name:		freeipmi
 Version:	0.1.3
 Release:	0.5
-License:	BSD
+License:	GPL
 Group:		Applications/System
 Source0:	ftp://ftp.californiadigital.com/pub/freeipmi/download/0.1.3/%{name}-%{version}.tar.gz
 # Source0-md5:	c4b088f806253971759c60263722e63d
 URL:		http://www.gnu.org/software/freeipmi/
+BuildRequires:	guile-devel
 #BuildRequires:	autoconf >= 2.50
 #BuildRequires:	automake
 #BuildRequires:	libltdl-devel
@@ -85,9 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc doc/BUGS NEWS TODO AUTHORS README INSTALL ChangeLog
+%doc doc/BUGS NEWS TODO AUTHORS README ChangeLog
 %doc doc/ipmi-over-ts2000.texi
-%doc COPYING.* DISCLAIMER.*
+%doc DISCLAIMER.*
 %{_sysconfdir}/init.d/bmc-watchdog
 %dir /var/lib/freeipmi
 /var/lib/freeipmi/ipckey
