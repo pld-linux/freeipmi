@@ -1,0 +1,11 @@
+--- freeipmi-0.1.3/bmc-watchdog/Makefile.am~	2004-10-22 03:47:56.000000000 +0300
++++ freeipmi-0.1.3/bmc-watchdog/Makefile.am	2005-03-03 00:14:47.000000000 +0200
+@@ -10,7 +10,7 @@
+ #TESTS=chk
+ 
+ DEFINITSCRIPT = bmc-watchdog
+-DEFINITSCRIPTdir = $(sysconfdir)/init.d
++DEFINITSCRIPTdir = $(sysconfdir)/rc.d/init.d
+ DEFINITSCRIPT_DATA = $(DEFINITSCRIPT)
+ 
+ BMCWATCHDOGLOGdir = /var/log/$(PACKAGE)
