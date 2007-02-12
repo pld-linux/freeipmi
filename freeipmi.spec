@@ -20,7 +20,7 @@
 #available.
 # dig: http://www.google.com/search?q=srfi&ie=UTF-8&oe=UTF-8
 Summary:	GNU FreeIPMI - system management software
-Summary(pl):	GNU FreeIPMI - oprogramowanie do zarz±dzania systemem
+Summary(pl.UTF-8):   GNU FreeIPMI - oprogramowanie do zarzÄ…dzania systemem
 Name:		freeipmi
 Version:	0.1.3
 Release:	0.12
@@ -54,18 +54,18 @@ specification. This project includes:
 - IPMI Ping (ipmiping)
 - RMCP Ping (rmcpping)
 
-%description -l pl
-System GNU FreeIPMI dostarcza "zdaln± konsolê" (Remote-Console) oraz
-"oprogramowanie do zarz±dzania systemem" (System Management Software)
+%description -l pl.UTF-8
+System GNU FreeIPMI dostarcza "zdalnÄ… konsolÄ™" (Remote-Console) oraz
+"oprogramowanie do zarzÄ…dzania systemem" (System Management Software)
 oparte na specyfikacji IPMI v1.5/2.0. Projekt zawiera:
-- KCS, SMIC, SSIF, sterowniki LAN i bibliotekê C (libfreeipmi)
-- pow³okê FreeIPMI SHell (fish)
+- KCS, SMIC, SSIF, sterowniki LAN i bibliotekÄ™ C (libfreeipmi)
+- powÅ‚okÄ™ FreeIPMI SHell (fish)
 - demona watchdog (bmc-watchdog)
 - czujniki (sensors)
-- dziennik zdarzeñ systemowych (sel - System Event Log)
-- narzêdzie informacyjne BMC (bmc-info)
-- narzêdzie konfiguracyjne BMC (bmc-config)
-- narzêdzie IPMI Power (ipmipower)
+- dziennik zdarzeÅ„ systemowych (sel - System Event Log)
+- narzÄ™dzie informacyjne BMC (bmc-info)
+- narzÄ™dzie konfiguracyjne BMC (bmc-config)
+- narzÄ™dzie IPMI Power (ipmipower)
 - ping dla IPMI (ipmiping)
 - ping dla RMCP (rmcpping)
 
@@ -80,25 +80,25 @@ Fish provides Shell, Extension/Plug-in and scripting interface. As a
 shell, User has access to both in-band and out-of-band access to the
 host BMC through a rich set of IPMI commands.
 
-%description fish -l pl
-Fish dostarcza pow³okê oraz interfejs rozszerzeñ/wtyczek i skryptów.
-Jako pow³oka daje u¿ytkownikowi dostêp do czê¶ci in-band jak i
-out-of-band systemowego BMC poprzez bogaty zestaw poleceñ IPMI.
+%description fish -l pl.UTF-8
+Fish dostarcza powÅ‚okÄ™ oraz interfejs rozszerzeÅ„/wtyczek i skryptÃ³w.
+Jako powÅ‚oka daje uÅ¼ytkownikowi dostÄ™p do czÄ™Å›ci in-band jak i
+out-of-band systemowego BMC poprzez bogaty zestaw poleceÅ„ IPMI.
 
 %package libs
 Summary:	Shared libraries for FreeIPMI
-Summary(pl):	Biblioteki wspó³dzielone FreeIPMI
+Summary(pl.UTF-8):   Biblioteki wspÃ³Å‚dzielone FreeIPMI
 Group:		Libraries
 
 %description libs
 Shared libraries for FreeIPMI.
 
-%description libs -l pl
-Biblioteki wspó³dzielone FreeIPMI.
+%description libs -l pl.UTF-8
+Biblioteki wspÃ³Å‚dzielone FreeIPMI.
 
 %package devel
 Summary:	Development package for FreeIPMI
-Summary(pl):	Pakiet programistyczny FreeIPMI
+Summary(pl.UTF-8):   Pakiet programistyczny FreeIPMI
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 
@@ -106,19 +106,19 @@ Requires:	%{name}-libs = %{version}-%{release}
 Development package for FreeIPMI. This package includes the FreeIPMI
 header files.
 
-%description devel -l pl
-Pakiet programistyczny FreeIPMI. Zawiera pliki nag³ówkowe.
+%description devel -l pl.UTF-8
+Pakiet programistyczny FreeIPMI. Zawiera pliki nagÅ‚Ã³wkowe.
 
 %package static
 Summary:	Static FreeIPMI library
-Summary(pl):	Statyczna biblioteka FreeIPMI
+Summary(pl.UTF-8):   Statyczna biblioteka FreeIPMI
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 Static FreeIPMI library.
 
-%description static -l pl
+%description static -l pl.UTF-8
 Statyczna biblioteka FreeIPMI.
 
 %prep
