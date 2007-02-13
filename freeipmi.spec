@@ -20,7 +20,7 @@
 #available.
 # dig: http://www.google.com/search?q=srfi&ie=UTF-8&oe=UTF-8
 Summary:	GNU FreeIPMI - system management software
-Summary(pl.UTF-8):   GNU FreeIPMI - oprogramowanie do zarządzania systemem
+Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
 Version:	0.1.3
 Release:	0.12
@@ -87,7 +87,7 @@ out-of-band systemowego BMC poprzez bogaty zestaw poleceń IPMI.
 
 %package libs
 Summary:	Shared libraries for FreeIPMI
-Summary(pl.UTF-8):   Biblioteki współdzielone FreeIPMI
+Summary(pl.UTF-8):	Biblioteki współdzielone FreeIPMI
 Group:		Libraries
 
 %description libs
@@ -98,7 +98,7 @@ Biblioteki współdzielone FreeIPMI.
 
 %package devel
 Summary:	Development package for FreeIPMI
-Summary(pl.UTF-8):   Pakiet programistyczny FreeIPMI
+Summary(pl.UTF-8):	Pakiet programistyczny FreeIPMI
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 
@@ -111,7 +111,7 @@ Pakiet programistyczny FreeIPMI. Zawiera pliki nagłówkowe.
 
 %package static
 Summary:	Static FreeIPMI library
-Summary(pl.UTF-8):   Statyczna biblioteka FreeIPMI
+Summary(pl.UTF-8):	Statyczna biblioteka FreeIPMI
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
