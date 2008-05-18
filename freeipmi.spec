@@ -26,7 +26,7 @@ Version:	0.1.3
 Release:	0.12
 License:	GPL
 Group:		Applications/System
-Source0:	ftp://ftp.californiadigital.com/pub/freeipmi/download/0.1.3/%{name}-%{version}.tar.gz
+Source0:	http://ftp.zresearch.com/pub/freeipmi/0.1.3/%{name}-%{version}.tar.gz
 # Source0-md5:	c4b088f806253971759c60263722e63d
 Patch0:		%{name}-am.patch
 Patch1:		%{name}-build.patch
@@ -148,7 +148,7 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post 	libs -p /sbin/ldconfig
+%post   libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
 
 %files
