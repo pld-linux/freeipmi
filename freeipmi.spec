@@ -22,19 +22,17 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	0.1.3
-Release:	0.12
+Version:	0.6.4
+Release:	0.1
 License:	GPL
 Group:		Applications/System
-Source0:	http://ftp.zresearch.com/pub/freeipmi/0.1.3/%{name}-%{version}.tar.gz
-# Source0-md5:	c4b088f806253971759c60263722e63d
-Patch0:		%{name}-am.patch
+Source0:	http://ftp.zresearch.com/pub/freeipmi/%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	50f97e15320c126528e95b27e97f4c1e
+Patch0:		%{name}-wrap.patch
 Patch1:		%{name}-build.patch
 URL:		http://www.gnu.org/software/freeipmi/
-BuildRequires:	autoconf
-BuildRequires:	automake
+BuildRequires:	grep
 BuildRequires:	guile-devel
-BuildRequires:	libtool
 BuildRequires:	readline-devel >= 4.0
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -69,26 +67,30 @@ oparte na specyfikacji IPMI v1.5/2.0. Projekt zawiera:
 - ping dla IPMI (ipmiping)
 - ping dla RMCP (rmcpping)
 
-%package fish
-Summary:	FreeIPMI Shell
+%package bmc-watchdog
+Summary:	FreeIPMI BMC watchdog
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
-Requires:	scsh
+Requires:	logrotate
 
-%description fish
-Fish provides Shell, Extension/Plug-in and scripting interface. As a
-shell, User has access to both in-band and out-of-band access to the
-host BMC through a rich set of IPMI commands.
-
-%description fish -l pl.UTF-8
-Fish dostarcza powłokę oraz interfejs rozszerzeń/wtyczek i skryptów.
-Jako powłoka daje użytkownikowi dostęp do części in-band jak i
-out-of-band systemowego BMC poprzez bogaty zestaw poleceń IPMI.
+%description bmc-watchdog
+Provides a watchdog daemon for OS monitoring and recovery.
 
 %package libs
 Summary:	Shared libraries for FreeIPMI
 Summary(pl.UTF-8):	Biblioteki współdzielone FreeIPMI
 Group:		Libraries
+
+
+%package ipmidetectd
+Summary:	IPMI node detection monitoring daemon
+Group:		Applications/System
+Requires:	%{name} = %{version}-%{release}
+Requires:	logrotate
+
+%description ipmidetectd
+IPMI node detection daemon.
+
 
 %description libs
 Shared libraries for FreeIPMI.
@@ -124,13 +126,12 @@ Statyczna biblioteka FreeIPMI.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
+install %{_includedir}/limits.h ipmi-oem/src/
+cat %{_includedir}/linux/limits.h |grep ARG_MAX >> ipmi-oem/src/limits.h
+install ipmi-oem/src/limits.h ipmi-raw/src/limits.h
 
 %build
-%{__aclocal}
-%{__autoconf}
-%{__autoheader}
-%{__automake}
 %configure
 
 %{__make}
@@ -140,10 +141,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install -j1 \
 	DESTDIR=$RPM_BUILD_ROOT
-
+install -d $RPM_BUILD_ROOT%{_initrddir}
+mv $RPM_BUILD_ROOT/etc/init.d/freeipmi* $RPM_BUILD_ROOT%{_initrddir}
 # TODO: patch Makefile.am instead
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/freeipmi
-rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -153,47 +154,93 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc doc/BUGS NEWS TODO AUTHORS README ChangeLog
-%doc doc/ipmi-over-ts2000.texi
-%doc DISCLAIMER.*
-%attr(754,root,root) /etc/rc.d/init.d/bmc-watchdog
-%attr(755,root,root) %{_sbindir}/rmcpping
-%attr(755,root,root) %{_sbindir}/ipmiping
-%attr(755,root,root) %{_sbindir}/ipmipower
-%attr(755,root,root) %{_sbindir}/bmc-watchdog
-%{_mandir}/man5/*
-%{_mandir}/man8/*
-%{_infodir}/freeipmi.info*
-%dir /var/log/freeipmi
-
-%files fish
-%defattr(644,root,root,755)
-%dir %{_sysconfdir}/fish
-%config(noreplace) %{_sysconfdir}/fish/sensors-conf.scm
-%config(noreplace) %{_sysconfdir}/fish/fish.scm
-%attr(755,root,root) %{_sbindir}/fish
+%doc AUTHORS ChangeLog DISCLAIMER.* INSTALL NEWS README TODO doc/freeipmi-*.txt
+%attr(0444,root,root) %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
 %attr(755,root,root) %{_sbindir}/bmc-config
 %attr(755,root,root) %{_sbindir}/bmc-info
-%attr(755,root,root) %{_sbindir}/sel
-%attr(755,root,root) %{_sbindir}/sensors
-%dir %{_datadir}/fish
-%{_datadir}/fish/extensions
-%{_mandir}/man1/*
+%attr(755,root,root) %{_sbindir}/ipmi-fru
+%attr(755,root,root) %{_sbindir}/ipmi-locate
+%attr(755,root,root) %{_sbindir}/pef-config
+%attr(755,root,root) %{_sbindir}/ipmi-oem
+%attr(755,root,root) %{_sbindir}/ipmi-raw
+%attr(755,root,root) %{_sbindir}/ipmi-sel
+%attr(755,root,root) %{_sbindir}/ipmi-sensors
+%attr(755,root,root) %{_sbindir}/ipmi-sensors-config
+%attr(755,root,root) %{_sbindir}/ipmiping
+%attr(755,root,root) %{_sbindir}/ipmipower
+%attr(755,root,root) %{_sbindir}/rmcpping
+%attr(755,root,root) %{_sbindir}/ipmiconsole
+%attr(755,root,root) %{_sbindir}/ipmimonitoring
+%attr(755,root,root) %{_sbindir}/ipmi-chassis
+%attr(755,root,root) %{_sbindir}/ipmidetect
+%{_mandir}/man8/bmc-config.8*
+%{_mandir}/man5/bmc-config.conf.5*
+%{_mandir}/man8/bmc-info.8*
+%{_mandir}/man8/ipmi-fru.8*
+%{_mandir}/man8/ipmi-locate.8*
+%{_mandir}/man8/pef-config.8*
+%{_mandir}/man8/ipmi-oem.8*
+%{_mandir}/man8/ipmi-raw.8*
+%{_mandir}/man8/ipmi-sel.8*
+%{_mandir}/man8/ipmi-sensors.8*
+%{_mandir}/man8/ipmi-sensors-config.8*
+%{_mandir}/man8/ipmiping.8*
+%{_mandir}/man8/ipmipower.8*
+%{_mandir}/man5/ipmipower.conf.5*
+%{_mandir}/man8/rmcpping.8*
+%{_mandir}/man8/ipmiconsole.8*
+%{_mandir}/man5/ipmiconsole.conf.5*
+%{_mandir}/man8/ipmimonitoring.8*
+%{_mandir}/man8/ipmi-chassis.8*
+%{_mandir}/man8/ipmidetect.8*
+%{_mandir}/man5/ipmidetect.conf.5*
+%{_mandir}/man7/freeipmi.7*
+#%dir %{_localstatedir}/cache/ipmimonitoringsdrcache
+%{_infodir}/*
+%dir /var/log/freeipmi
+
+%files bmc-watchdog
+%defattr(644,root,root,755)
+%config(noreplace) %{_initrddir}/freeipmi-bmc-watchdog
+%config(noreplace) %{_sysconfdir}/sysconfig/freeipmi-bmc-watchdog
+%config(noreplace) %{_sysconfdir}/logrotate.d/freeipmi-bmc-watchdog
+%attr(755,root,root) %{_sbindir}/bmc-watchdog
+%{_mandir}/man8/bmc-watchdog.8*
+%dir /var/log/freeipmi
+
+%files ipmidetectd
+%defattr(644,root,root,755)
+%config(noreplace) %{_initrddir}/freeipmi-ipmidetectd
+%attr(755,root,root) %{_sbindir}/ipmidetectd
+%{_mandir}/man5/ipmidetectd.conf.5*
+%{_mandir}/man8/ipmidetectd.8*
 
 %files libs
 %defattr(644,root,root,755)
 %dir /var/lib/freeipmi
 /var/lib/freeipmi/ipckey
-%{_libdir}/libfreeipmi.so.1.*.*
+%attr(755,root,root) %{_libdir}/libfreeipmi*.so.*
+%attr(755,root,root) %{_libdir}/libipmiconsole*.so.*
+%attr(755,root,root) %{_libdir}/libipmidetect*.so.*
+%attr(755,root,root) %{_libdir}/libipmimonitoring*.so.*
 
 %files devel
 %defattr(644,root,root,755)
-%doc doc/examples/
-%doc doc/{ipmi-network-layout.fig,freeipmi-hackers-intro.sxi}
+%attr(755,root,root) %{_libdir}/libipmiconsole.so
 %attr(755,root,root) %{_libdir}/libfreeipmi.so
+%attr(755,root,root) %{_libdir}/libipmidetect.so
+%attr(755,root,root) %{_libdir}/libipmimonitoring.so
 %{_libdir}/libfreeipmi.la
+%{_libdir}/libipmiconsole.la
+%{_libdir}/libipmidetect.la
+%{_libdir}/libipmimonitoring.la
 %{_includedir}/freeipmi
+%{_includedir}/ipmi*.h
+%{_mandir}/man3/*
 
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libfreeipmi.a
+%{_libdir}/libipmiconsole.a
+%{_libdir}/libipmidetect.a
+%{_libdir}/libipmimonitoring.a
