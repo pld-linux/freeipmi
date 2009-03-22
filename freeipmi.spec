@@ -141,8 +141,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install -j1 \
 	DESTDIR=$RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_initrddir}
-mv $RPM_BUILD_ROOT/etc/init.d/freeipmi* $RPM_BUILD_ROOT%{_initrddir}
+install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+mv $RPM_BUILD_ROOT/etc/init.d/freeipmi* $RPM_BUILD_ROOT/etc/rc.d/init.d
 # TODO: patch Makefile.am instead
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/freeipmi
 
@@ -201,7 +201,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files bmc-watchdog
 %defattr(644,root,root,755)
-%config(noreplace) %{_initrddir}/freeipmi-bmc-watchdog
+%config(noreplace) /etc/rc.d/init.d/freeipmi-bmc-watchdog
 %config(noreplace) %{_sysconfdir}/sysconfig/freeipmi-bmc-watchdog
 %config(noreplace) %{_sysconfdir}/logrotate.d/freeipmi-bmc-watchdog
 %attr(755,root,root) %{_sbindir}/bmc-watchdog
@@ -210,7 +210,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files ipmidetectd
 %defattr(644,root,root,755)
-%config(noreplace) %{_initrddir}/freeipmi-ipmidetectd
+%config(noreplace) /etc/rc.d/init.d/freeipmi-ipmidetectd
 %attr(755,root,root) %{_sbindir}/ipmidetectd
 %{_mandir}/man5/ipmidetectd.conf.5*
 %{_mandir}/man8/ipmidetectd.8*
