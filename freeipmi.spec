@@ -22,14 +22,13 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	0.6.4
+Version:	0.7.8
 Release:	0.1
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.zresearch.com/pub/freeipmi/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	50f97e15320c126528e95b27e97f4c1e
-Patch0:		%{name}-wrap.patch
-Patch1:		%{name}-build.patch
+# Source0-md5:	633a015f931985640cd21324fa1db1aa
+Patch0:		%{name}-build.patch
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	grep
 BuildRequires:	guile-devel
@@ -125,8 +124,7 @@ Statyczna biblioteka FreeIPMI.
 
 %prep
 %setup -q
-%patch0 -p1
-#%patch1 -p1
+#%patch0 -p1
 install %{_includedir}/limits.h ipmi-oem/src/
 cat %{_includedir}/linux/limits.h |grep ARG_MAX >> ipmi-oem/src/limits.h
 install ipmi-oem/src/limits.h ipmi-raw/src/limits.h
@@ -156,11 +154,14 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog DISCLAIMER.* INSTALL NEWS README TODO doc/freeipmi-*.txt
 %attr(0444,root,root) %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/freeipmi.conf
 %attr(755,root,root) %{_sbindir}/bmc-config
+%attr(755,root,root) %{_sbindir}/bmc-device
 %attr(755,root,root) %{_sbindir}/bmc-info
 %attr(755,root,root) %{_sbindir}/ipmi-fru
 %attr(755,root,root) %{_sbindir}/ipmi-locate
 %attr(755,root,root) %{_sbindir}/pef-config
+%attr(755,root,root) %{_sbindir}/ipmi-chassis-config
 %attr(755,root,root) %{_sbindir}/ipmi-oem
 %attr(755,root,root) %{_sbindir}/ipmi-raw
 %attr(755,root,root) %{_sbindir}/ipmi-sel
@@ -175,10 +176,16 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/ipmidetect
 %{_mandir}/man8/bmc-config.8*
 %{_mandir}/man5/bmc-config.conf.5*
+%{_mandir}/man8/bmc-device.8*
 %{_mandir}/man8/bmc-info.8*
+%{_mandir}/man5/freeipmi.conf.5*
 %{_mandir}/man8/ipmi-fru.8*
 %{_mandir}/man8/ipmi-locate.8*
 %{_mandir}/man8/pef-config.8*
+%{_mandir}/man5/ipmi_monitoring_sensors.conf.5*
+%{_mandir}/man5/ipmimonitoring.conf.5*
+%{_mandir}/man5/ipmimonitoring_sensors.conf.5*
+%{_mandir}/man5/libipmimonitoring.conf.5*
 %{_mandir}/man8/ipmi-oem.8*
 %{_mandir}/man8/ipmi-raw.8*
 %{_mandir}/man8/ipmi-sel.8*
@@ -192,6 +199,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/ipmiconsole.conf.5*
 %{_mandir}/man8/ipmimonitoring.8*
 %{_mandir}/man8/ipmi-chassis.8*
+%{_mandir}/man8/ipmi-chassis-config.8*
 %{_mandir}/man8/ipmidetect.8*
 %{_mandir}/man5/ipmidetect.conf.5*
 %{_mandir}/man7/freeipmi.7*
