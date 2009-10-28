@@ -22,12 +22,12 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	0.7.8
+Version:	0.7.14
 Release:	0.1
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.zresearch.com/pub/freeipmi/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	633a015f931985640cd21324fa1db1aa
+# Source0-md5:	591496e9906a876408983c6e47abfe1f
 Patch0:		%{name}-build.patch
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	grep
