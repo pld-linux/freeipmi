@@ -71,6 +71,7 @@ oparte na specyfikacji IPMI v1.5/2.0. Projekt zawiera:
 
 %package bmc-watchdog
 Summary:	FreeIPMI BMC watchdog
+Summary(pl.UTF-8):	FreeIPMI - watchdog BMC
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	logrotate
@@ -78,14 +79,13 @@ Requires:	logrotate
 %description bmc-watchdog
 Provides a watchdog daemon for OS monitoring and recovery.
 
-%package libs
-Summary:	Shared libraries for FreeIPMI
-Summary(pl.UTF-8):	Biblioteki współdzielone FreeIPMI
-Group:		Libraries
-
+%description bmc-watchdog -l pl.UTF-8
+Ten pakiet udostępnia demona watchdoga do monitorowania systemu i
+uruchamiania po awarii.
 
 %package ipmidetectd
-Summary:	IPMI node detection monitoring daemon
+Summary:	IPMI node detection daemon
+Summary(pl.UTF-8):	Demon wykrywający węzły IPMI
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	logrotate
@@ -93,6 +93,13 @@ Requires:	logrotate
 %description ipmidetectd
 IPMI node detection daemon.
 
+%description ipmidetectd -l pl.UTF-8
+Demon wykrywający węzły IPMI.
+
+%package libs
+Summary:	Shared libraries for FreeIPMI
+Summary(pl.UTF-8):	Biblioteki współdzielone FreeIPMI
+Group:		Libraries
 
 %description libs
 Shared libraries for FreeIPMI.
@@ -128,9 +135,6 @@ Statyczna biblioteka FreeIPMI.
 %prep
 %setup -q
 %patch0 -p1
-#install %{_includedir}/limits.h ipmi-oem/src/
-#cat %{_includedir}/linux/limits.h |grep ARG_MAX >> ipmi-oem/src/limits.h
-#install ipmi-oem/src/limits.h ipmi-raw/src/limits.h
 
 %build
 %{__libtoolize}
