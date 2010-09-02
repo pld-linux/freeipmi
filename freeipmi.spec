@@ -6,7 +6,6 @@
 #    that .so needs to read ipckey inode), so one vote for discarding
 #    -libs?
 #  - additional split by requires/services (watchdog)
-#  - file /usr/share/man/man1/sensors.1.gz from install of freeipmi-0.1.3-0.5 conflicts with file from package lm_sensors-2.
 #  - wtf is this?
 # # bmc-config
 #>>--:>  >>--:>  >>--:> >>--:>
@@ -22,16 +21,20 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	0.7.14
+Version:	0.8.9
 Release:	0.1
-License:	GPL
+License:	GPL v2+
 Group:		Applications/System
 Source0:	http://ftp.zresearch.com/pub/freeipmi/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	591496e9906a876408983c6e47abfe1f
-Patch0:		%{name}-build.patch
+# Source0-md5:	5c729b91e229c3ed3cd1d568195a2d26
+Patch0:		%{name}-install.patch
 URL:		http://www.gnu.org/software/freeipmi/
+BuildRequires:	autoconf >= 2.57
+BuildRequires:	automake >= 1:1.9
 BuildRequires:	grep
 BuildRequires:	guile-devel
+BuildRequires:	libgcrypt-devel
+BuildRequires:	libtool
 BuildRequires:	readline-devel >= 4.0
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -124,12 +127,17 @@ Statyczna biblioteka FreeIPMI.
 
 %prep
 %setup -q
-#%patch0 -p1
-install %{_includedir}/limits.h ipmi-oem/src/
-cat %{_includedir}/linux/limits.h |grep ARG_MAX >> ipmi-oem/src/limits.h
-install ipmi-oem/src/limits.h ipmi-raw/src/limits.h
+%patch0 -p1
+#install %{_includedir}/limits.h ipmi-oem/src/
+#cat %{_includedir}/linux/limits.h |grep ARG_MAX >> ipmi-oem/src/limits.h
+#install ipmi-oem/src/limits.h ipmi-raw/src/limits.h
 
 %build
+%{__libtoolize}
+%{__aclocal} -I config
+%{__autoconf}
+%{__autoheader}
+%{__automake}
 %configure
 
 %{__make}
@@ -139,8 +147,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install -j1 \
 	DESTDIR=$RPM_BUILD_ROOT
+
 install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
-mv $RPM_BUILD_ROOT/etc/init.d/freeipmi* $RPM_BUILD_ROOT/etc/rc.d/init.d
+mv $RPM_BUILD_ROOT/etc/init.d/* $RPM_BUILD_ROOT/etc/rc.d/init.d
 # TODO: patch Makefile.am instead
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/freeipmi
 
@@ -153,84 +162,93 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog DISCLAIMER.* INSTALL NEWS README TODO doc/freeipmi-*.txt
-%attr(0444,root,root) %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/freeipmi.conf
+%attr(640,root,root) %config(noreplace) %{_sysconfdir}/freeipmi.conf
+%attr(444,root,root) %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
 %attr(755,root,root) %{_sbindir}/bmc-config
 %attr(755,root,root) %{_sbindir}/bmc-device
 %attr(755,root,root) %{_sbindir}/bmc-info
+%attr(755,root,root) %{_sbindir}/ipmi-chassis
+%attr(755,root,root) %{_sbindir}/ipmi-chassis-config
+%attr(755,root,root) %{_sbindir}/ipmi-dcmi
 %attr(755,root,root) %{_sbindir}/ipmi-fru
 %attr(755,root,root) %{_sbindir}/ipmi-locate
-%attr(755,root,root) %{_sbindir}/pef-config
-%attr(755,root,root) %{_sbindir}/ipmi-chassis-config
 %attr(755,root,root) %{_sbindir}/ipmi-oem
+%attr(755,root,root) %{_sbindir}/ipmi-pef-config
 %attr(755,root,root) %{_sbindir}/ipmi-raw
 %attr(755,root,root) %{_sbindir}/ipmi-sel
 %attr(755,root,root) %{_sbindir}/ipmi-sensors
 %attr(755,root,root) %{_sbindir}/ipmi-sensors-config
+%attr(755,root,root) %{_sbindir}/ipmiconsole
+%attr(755,root,root) %{_sbindir}/ipmidetect
+%attr(755,root,root) %{_sbindir}/ipmimonitoring
 %attr(755,root,root) %{_sbindir}/ipmiping
 %attr(755,root,root) %{_sbindir}/ipmipower
+%attr(755,root,root) %{_sbindir}/pef-config
 %attr(755,root,root) %{_sbindir}/rmcpping
-%attr(755,root,root) %{_sbindir}/ipmiconsole
-%attr(755,root,root) %{_sbindir}/ipmimonitoring
-%attr(755,root,root) %{_sbindir}/ipmi-chassis
-%attr(755,root,root) %{_sbindir}/ipmidetect
-%{_mandir}/man8/bmc-config.8*
 %{_mandir}/man5/bmc-config.conf.5*
-%{_mandir}/man8/bmc-device.8*
-%{_mandir}/man8/bmc-info.8*
 %{_mandir}/man5/freeipmi.conf.5*
-%{_mandir}/man8/ipmi-fru.8*
-%{_mandir}/man8/ipmi-locate.8*
-%{_mandir}/man8/pef-config.8*
 %{_mandir}/man5/ipmi_monitoring_sensors.conf.5*
+%{_mandir}/man5/ipmiconsole.conf.5*
+%{_mandir}/man5/ipmidetect.conf.5*
 %{_mandir}/man5/ipmimonitoring.conf.5*
 %{_mandir}/man5/ipmimonitoring_sensors.conf.5*
+%{_mandir}/man5/ipmipower.conf.5*
 %{_mandir}/man5/libipmimonitoring.conf.5*
+%{_mandir}/man7/freeipmi.7*
+%{_mandir}/man8/bmc-config.8*
+%{_mandir}/man8/bmc-device.8*
+%{_mandir}/man8/bmc-info.8*
+%{_mandir}/man8/ipmi-chassis-config.8*
+%{_mandir}/man8/ipmi-chassis.8*
+%{_mandir}/man8/ipmi-dcmi.8*
+%{_mandir}/man8/ipmi-fru.8*
+%{_mandir}/man8/ipmi-locate.8*
 %{_mandir}/man8/ipmi-oem.8*
+%{_mandir}/man8/ipmi-pef-config.8*
 %{_mandir}/man8/ipmi-raw.8*
 %{_mandir}/man8/ipmi-sel.8*
-%{_mandir}/man8/ipmi-sensors.8*
 %{_mandir}/man8/ipmi-sensors-config.8*
+%{_mandir}/man8/ipmi-sensors.8*
+%{_mandir}/man8/ipmiconsole.8*
+%{_mandir}/man8/ipmidetect.8*
+%{_mandir}/man8/ipmimonitoring.8*
 %{_mandir}/man8/ipmiping.8*
 %{_mandir}/man8/ipmipower.8*
-%{_mandir}/man5/ipmipower.conf.5*
+%{_mandir}/man8/pef-config.8*
 %{_mandir}/man8/rmcpping.8*
-%{_mandir}/man8/ipmiconsole.8*
-%{_mandir}/man5/ipmiconsole.conf.5*
-%{_mandir}/man8/ipmimonitoring.8*
-%{_mandir}/man8/ipmi-chassis.8*
-%{_mandir}/man8/ipmi-chassis-config.8*
-%{_mandir}/man8/ipmidetect.8*
-%{_mandir}/man5/ipmidetect.conf.5*
-%{_mandir}/man7/freeipmi.7*
 #%dir %{_localstatedir}/cache/ipmimonitoringsdrcache
-%{_infodir}/*
+%{_infodir}/freeipmi-faq.info*
 %dir /var/log/freeipmi
 
 %files bmc-watchdog
 %defattr(644,root,root,755)
-%config(noreplace) /etc/rc.d/init.d/freeipmi-bmc-watchdog
-%config(noreplace) %{_sysconfdir}/sysconfig/freeipmi-bmc-watchdog
-%config(noreplace) %{_sysconfdir}/logrotate.d/freeipmi-bmc-watchdog
+%config(noreplace) /etc/rc.d/init.d/bmc-watchdog
+%config(noreplace) /etc/sysconfig/bmc-watchdog
+%config(noreplace) /etc/logrotate.d/bmc-watchdog
 %attr(755,root,root) %{_sbindir}/bmc-watchdog
 %{_mandir}/man8/bmc-watchdog.8*
 %dir /var/log/freeipmi
 
 %files ipmidetectd
 %defattr(644,root,root,755)
-%config(noreplace) /etc/rc.d/init.d/freeipmi-ipmidetectd
 %attr(755,root,root) %{_sbindir}/ipmidetectd
+%attr(754,root,root) /etc/rc.d/init.d/ipmidetectd
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/ipmidetectd.conf
 %{_mandir}/man5/ipmidetectd.conf.5*
 %{_mandir}/man8/ipmidetectd.8*
 
 %files libs
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libfreeipmi.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libfreeipmi.so.10
+%attr(755,root,root) %{_libdir}/libipmiconsole.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libipmiconsole.so.2
+%attr(755,root,root) %{_libdir}/libipmidetect.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libipmidetect.so.0
+%attr(755,root,root) %{_libdir}/libipmimonitoring.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libipmimonitoring.so.4
 %dir /var/lib/freeipmi
 /var/lib/freeipmi/ipckey
-%attr(755,root,root) %{_libdir}/libfreeipmi*.so.*
-%attr(755,root,root) %{_libdir}/libipmiconsole*.so.*
-%attr(755,root,root) %{_libdir}/libipmidetect*.so.*
-%attr(755,root,root) %{_libdir}/libipmimonitoring*.so.*
 
 %files devel
 %defattr(644,root,root,755)
@@ -244,7 +262,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libipmimonitoring.la
 %{_includedir}/freeipmi
 %{_includedir}/ipmi*.h
-%{_mandir}/man3/*
+%{_mandir}/man3/libfreeipmi.3*
+%{_mandir}/man3/libipmiconsole.3*
+%{_mandir}/man3/libipmidetect.3*
+%{_mandir}/man3/libipmimonitoring.3*
 
 %files static
 %defattr(644,root,root,755)
