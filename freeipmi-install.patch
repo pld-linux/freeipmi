@@ -1,5 +1,5 @@
---- freeipmi-0.8.9/ipmiconsole/src/libipmiconsole/Makefile.am.orig	2010-08-20 19:05:26.000000000 +0200
-+++ freeipmi-0.8.9/ipmiconsole/src/libipmiconsole/Makefile.am	2010-09-01 20:42:00.930817429 +0200
+--- freeipmi-1.0.1/libipmiconsole/src/Makefile.am.orig	2010-08-20 19:05:26.000000000 +0200
++++ freeipmi-1.0.1/libipmiconsole/src/Makefile.am	2010-09-01 20:42:00.930817429 +0200
 @@ -76,6 +76,6 @@
  install-data-hook: $(INSTALL_LOGDIR)
  

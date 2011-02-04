@@ -21,12 +21,12 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	0.8.11
+Version:	1.0.1
 Release:	0.1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
-# Source0-md5:	4d60e2fe787ca6e51788f3efd82ebe04
+# Source0-md5:	4af11fb5645f025ac157684e3f5db98e
 Patch0:		%{name}-install.patch
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf >= 2.57
@@ -155,7 +155,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
 mv $RPM_BUILD_ROOT/etc/init.d/* $RPM_BUILD_ROOT/etc/rc.d/init.d
 # TODO: patch Makefile.am instead
-rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/freeipmi
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/doc/freeipmi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -166,18 +166,26 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog DISCLAIMER.* INSTALL NEWS README TODO doc/freeipmi-*.txt
-%attr(640,root,root) %config(noreplace) %{_sysconfdir}/freeipmi.conf
-%attr(444,root,root) %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
+%dir %{_sysconfdir}/freeipmi
+%attr(640,root,root) %config(noreplace) %{_sysconfdir}/freeipmi/freeipmi.conf
+%attr(444,root,root) %config(noreplace) %{_sysconfdir}/freeipmi/freeipmi_interpret_sel.conf
+%attr(444,root,root) %config(noreplace) %{_sysconfdir}/freeipmi/freeipmi_interpret_sensor.conf
+%attr(640,root,root) %config(noreplace) %{_sysconfdir}/freeipmi/ipmidetect.conf
+%attr(640,root,root) %config(noreplace) %{_sysconfdir}/freeipmi/libipmiconsole.conf
 %attr(755,root,root) %{_sbindir}/bmc-config
 %attr(755,root,root) %{_sbindir}/bmc-device
 %attr(755,root,root) %{_sbindir}/bmc-info
 %attr(755,root,root) %{_sbindir}/ipmi-chassis
 %attr(755,root,root) %{_sbindir}/ipmi-chassis-config
+%attr(755,root,root) %{_sbindir}/ipmi-console
 %attr(755,root,root) %{_sbindir}/ipmi-dcmi
+%attr(755,root,root) %{_sbindir}/ipmi-detect
 %attr(755,root,root) %{_sbindir}/ipmi-fru
 %attr(755,root,root) %{_sbindir}/ipmi-locate
 %attr(755,root,root) %{_sbindir}/ipmi-oem
 %attr(755,root,root) %{_sbindir}/ipmi-pef-config
+%attr(755,root,root) %{_sbindir}/ipmi-ping
+%attr(755,root,root) %{_sbindir}/ipmi-power
 %attr(755,root,root) %{_sbindir}/ipmi-raw
 %attr(755,root,root) %{_sbindir}/ipmi-sel
 %attr(755,root,root) %{_sbindir}/ipmi-sensors
@@ -188,15 +196,19 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/ipmiping
 %attr(755,root,root) %{_sbindir}/ipmipower
 %attr(755,root,root) %{_sbindir}/pef-config
+%attr(755,root,root) %{_sbindir}/rmcp-ping
 %attr(755,root,root) %{_sbindir}/rmcpping
 %{_mandir}/man5/bmc-config.conf.5*
 %{_mandir}/man5/freeipmi.conf.5*
+%{_mandir}/man5/freeipmi_interpret_sel.conf.5*
+%{_mandir}/man5/freeipmi_interpret_sensor.conf.5*
 %{_mandir}/man5/ipmi_monitoring_sensors.conf.5*
 %{_mandir}/man5/ipmiconsole.conf.5*
 %{_mandir}/man5/ipmidetect.conf.5*
 %{_mandir}/man5/ipmimonitoring.conf.5*
 %{_mandir}/man5/ipmimonitoring_sensors.conf.5*
 %{_mandir}/man5/ipmipower.conf.5*
+%{_mandir}/man5/libipmiconsole.conf.5*
 %{_mandir}/man5/libipmimonitoring.conf.5*
 %{_mandir}/man7/freeipmi.7*
 %{_mandir}/man8/bmc-config.8*
@@ -204,11 +216,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/bmc-info.8*
 %{_mandir}/man8/ipmi-chassis-config.8*
 %{_mandir}/man8/ipmi-chassis.8*
+%{_mandir}/man8/ipmi-console.8*
 %{_mandir}/man8/ipmi-dcmi.8*
+%{_mandir}/man8/ipmi-detect.8*
 %{_mandir}/man8/ipmi-fru.8*
 %{_mandir}/man8/ipmi-locate.8*
 %{_mandir}/man8/ipmi-oem.8*
 %{_mandir}/man8/ipmi-pef-config.8*
+%{_mandir}/man8/ipmi-ping.8*
+%{_mandir}/man8/ipmi-power.8*
 %{_mandir}/man8/ipmi-raw.8*
 %{_mandir}/man8/ipmi-sel.8*
 %{_mandir}/man8/ipmi-sensors-config.8*
@@ -219,6 +235,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/ipmiping.8*
 %{_mandir}/man8/ipmipower.8*
 %{_mandir}/man8/pef-config.8*
+%{_mandir}/man8/rmcp-ping.8*
 %{_mandir}/man8/rmcpping.8*
 #%dir %{_localstatedir}/cache/ipmimonitoringsdrcache
 %{_infodir}/freeipmi-faq.info*
@@ -237,7 +254,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/ipmidetectd
 %attr(754,root,root) /etc/rc.d/init.d/ipmidetectd
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/ipmidetectd.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/freeipmi/ipmidetectd.conf
 %{_mandir}/man5/ipmidetectd.conf.5*
 %{_mandir}/man8/ipmidetectd.8*
 
@@ -250,7 +267,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libipmidetect.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libipmidetect.so.0
 %attr(755,root,root) %{_libdir}/libipmimonitoring.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libipmimonitoring.so.4
+%attr(755,root,root) %ghost %{_libdir}/libipmimonitoring.so.5
 %dir /var/lib/freeipmi
 /var/lib/freeipmi/ipckey
 
