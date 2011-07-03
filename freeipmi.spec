@@ -21,12 +21,12 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	1.0.4
+Version:	1.0.5
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
-# Source0-md5:	4a3eea50425f06ed41772e10d7aad296
+# Source0-md5:	0b66f19bf39906f64fff38f1fc9977c4
 Patch0:		%{name}-install.patch
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf >= 2.57
@@ -112,6 +112,7 @@ Summary:	Development package for FreeIPMI
 Summary(pl.UTF-8):	Pakiet programistyczny FreeIPMI
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	libgcrypt-devel
 
 %description devel
 Development package for FreeIPMI. This package includes the FreeIPMI
@@ -283,6 +284,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libipmimonitoring.la
 %{_includedir}/freeipmi
 %{_includedir}/ipmi*.h
+%{_pkgconfigdir}/libfreeipmi.pc
+%{_pkgconfigdir}/libipmiconsole.pc
+%{_pkgconfigdir}/libipmidetect.pc
+%{_pkgconfigdir}/libipmimonitoring.pc
 %{_mandir}/man3/libfreeipmi.3*
 %{_mandir}/man3/libipmiconsole.3*
 %{_mandir}/man3/libipmidetect.3*
