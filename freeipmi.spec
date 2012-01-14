@@ -21,12 +21,12 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	1.0.8
+Version:	1.1.1
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
-# Source0-md5:	e95a33e91f04c866f74de16e06badd49
+# Source0-md5:	2e69caa76be1bbe27215e42ab58ddbad
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake >= 1:1.9
@@ -183,6 +183,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/ipmi-locate
 %attr(755,root,root) %{_sbindir}/ipmi-oem
 %attr(755,root,root) %{_sbindir}/ipmi-pef-config
+%attr(755,root,root) %{_sbindir}/ipmi-pet
 %attr(755,root,root) %{_sbindir}/ipmi-ping
 %attr(755,root,root) %{_sbindir}/ipmi-power
 %attr(755,root,root) %{_sbindir}/ipmi-raw
@@ -222,6 +223,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/ipmi-locate.8*
 %{_mandir}/man8/ipmi-oem.8*
 %{_mandir}/man8/ipmi-pef-config.8*
+%{_mandir}/man8/ipmi-pet.8*
 %{_mandir}/man8/ipmi-ping.8*
 %{_mandir}/man8/ipmi-power.8*
 %{_mandir}/man8/ipmi-raw.8*
@@ -260,7 +262,7 @@ rm -rf $RPM_BUILD_ROOT
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libfreeipmi.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libfreeipmi.so.10
+%attr(755,root,root) %ghost %{_libdir}/libfreeipmi.so.12
 %attr(755,root,root) %{_libdir}/libipmiconsole.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libipmiconsole.so.2
 %attr(755,root,root) %{_libdir}/libipmidetect.so.*.*.*
