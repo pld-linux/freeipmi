@@ -1,4 +1,5 @@
 # TODO
+#  - PLDize/register init scripts
 #  - split based on provided spec.in: devel, fish, utils ?
 #    still not sure about how to split packages. move -libs to main
 #    and programs to -utils? or leave as it is? (but package init.d
@@ -21,12 +22,12 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	1.1.7
+Version:	1.2.2
 Release:	1
 License:	GPL v3+
 Group:		Applications/System
 Source0:	http://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
-# Source0-md5:	70c4d9232e7525dd3221586a06f86fb4
+# Source0-md5:	abcb5ebe9469bbcf0cb0d1bce3651fd7
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake >= 1:1.9
@@ -73,7 +74,6 @@ Summary:	FreeIPMI BMC watchdog
 Summary(pl.UTF-8):	FreeIPMI - watchdog BMC
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
-Requires:	logrotate
 
 %description bmc-watchdog
 Provides a watchdog daemon for OS monitoring and recovery.
@@ -86,14 +86,27 @@ uruchamiania po awarii.
 Summary:	IPMI node detection daemon
 Summary(pl.UTF-8):	Demon wykrywający węzły IPMI
 Group:		Applications/System
+Requires(post,preun):	/sbin/ldconfig
 Requires:	%{name} = %{version}-%{release}
-Requires:	logrotate
 
 %description ipmidetectd
 IPMI node detection daemon.
 
 %description ipmidetectd -l pl.UTF-8
 Demon wykrywający węzły IPMI.
+
+%package ipmiseld
+Summary:	IPMI SEL syslog logging daemon
+Summary(pl.UTF-8):	IPMI SEL - demon logujący do sysloga
+Group:		Applications/System
+Requires(post,preun):	/sbin/ldconfig
+Requires:	%{name} = %{version}-%{release}
+
+%description ipmiseld
+IPMI SEL syslog logging daemon.
+
+%description ipmiseld -l pl.UTF-8
+IPMI SEL - demon logujący do sysloga.
 
 %package libs
 Summary:	Shared libraries for FreeIPMI
@@ -240,16 +253,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/rmcpping.8*
 #%dir %{_localstatedir}/cache/ipmimonitoringsdrcache
 %{_infodir}/freeipmi-faq.info*
-%dir /var/log/freeipmi
 
 %files bmc-watchdog
 %defattr(644,root,root,755)
 %config(noreplace) /etc/rc.d/init.d/bmc-watchdog
 %config(noreplace) /etc/sysconfig/bmc-watchdog
-%config(noreplace) /etc/logrotate.d/bmc-watchdog
 %attr(755,root,root) %{_sbindir}/bmc-watchdog
 %{_mandir}/man8/bmc-watchdog.8*
-%dir /var/log/freeipmi
 
 %files ipmidetectd
 %defattr(644,root,root,755)
@@ -259,10 +269,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/ipmidetectd.conf.5*
 %{_mandir}/man8/ipmidetectd.8*
 
+%files ipmiseld
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_sbindir}/ipmiseld
+%attr(754,root,root) /etc/rc.d/init.d/ipmiseld
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/freeipmi/ipmiseld.conf
+%{_mandir}/man5/ipmiseld.conf.5*
+%{_mandir}/man8/ipmiseld.8*
+
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libfreeipmi.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libfreeipmi.so.12
+%attr(755,root,root) %ghost %{_libdir}/libfreeipmi.so.13
 %attr(755,root,root) %{_libdir}/libipmiconsole.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libipmiconsole.so.2
 %attr(755,root,root) %{_libdir}/libipmidetect.so.*.*.*
