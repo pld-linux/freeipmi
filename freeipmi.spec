@@ -7,27 +7,16 @@
 #    that .so needs to read ipckey inode), so one vote for discarding
 #    -libs?
 #  - additional split by requires/services (watchdog)
-#  - wtf is this?
-# # bmc-config
-#>>--:>  >>--:>  >>--:> >>--:>
-#~ ~   Cat ate the fish!!  ~ ~
-#>>--:>  >>--:>  >>--:> >>--:>
-#Fish Exception (gh_standard_handler dump):
-#tag        : 
-#throw args : 
-#data       : [/usr/share/fish/extensions/sensors.scm]
-#misc-error(#f %s %S (no such module (srfi srfi-13)) #f)No backtrace
-#available.
-# dig: http://www.google.com/search?q=srfi&ie=UTF-8&oe=UTF-8
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	1.2.3
+Version:	1.2.4
 Release:	1
 License:	GPL v3+
 Group:		Applications/System
 Source0:	http://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
-# Source0-md5:	b1e21641c31b9d3291bdfe4a2b323d03
+# Source0-md5:	84a004c3908743477968c4ba30276b30
+Patch0:		%{name}-am.patch
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake >= 1:1.9
@@ -147,6 +136,7 @@ Statyczna biblioteka FreeIPMI.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__libtoolize}
