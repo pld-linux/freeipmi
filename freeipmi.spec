@@ -10,12 +10,12 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	1.3.4
-Release:	2
+Version:	1.4.1
+Release:	1
 License:	GPL v3+
 Group:		Applications/System
 Source0:	http://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
-# Source0-md5:	3097509c9a71c130f05bd17270002a5b
+# Source0-md5:	09b726f3c7bcb09fa0ca2f060b7d1cc6
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake >= 1:1.9
@@ -177,6 +177,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/bmc-info
 %attr(755,root,root) %{_sbindir}/ipmi-chassis
 %attr(755,root,root) %{_sbindir}/ipmi-chassis-config
+%attr(755,root,root) %{_sbindir}/ipmi-config
 %attr(755,root,root) %{_sbindir}/ipmi-console
 %attr(755,root,root) %{_sbindir}/ipmi-dcmi
 %attr(755,root,root) %{_sbindir}/ipmi-detect
@@ -203,6 +204,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/freeipmi.conf.5*
 %{_mandir}/man5/freeipmi_interpret_sel.conf.5*
 %{_mandir}/man5/freeipmi_interpret_sensor.conf.5*
+%{_mandir}/man5/ipmi-config.conf.5*
 %{_mandir}/man5/ipmi_monitoring_sensors.conf.5*
 %{_mandir}/man5/ipmiconsole.conf.5*
 %{_mandir}/man5/ipmidetect.conf.5*
@@ -217,6 +219,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/bmc-info.8*
 %{_mandir}/man8/ipmi-chassis-config.8*
 %{_mandir}/man8/ipmi-chassis.8*
+%{_mandir}/man8/ipmi-config.8*
 %{_mandir}/man8/ipmi-console.8*
 %{_mandir}/man8/ipmi-dcmi.8*
 %{_mandir}/man8/ipmi-detect.8*
@@ -268,7 +271,7 @@ rm -rf $RPM_BUILD_ROOT
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libfreeipmi.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libfreeipmi.so.15
+%attr(755,root,root) %ghost %{_libdir}/libfreeipmi.so.16
 %attr(755,root,root) %{_libdir}/libipmiconsole.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libipmiconsole.so.2
 %attr(755,root,root) %{_libdir}/libipmidetect.so.*.*.*
