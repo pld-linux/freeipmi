@@ -10,12 +10,12 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	1.4.1
+Version:	1.4.4
 Release:	1
 License:	GPL v3+
 Group:		Applications/System
 Source0:	http://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
-# Source0-md5:	09b726f3c7bcb09fa0ca2f060b7d1cc6
+# Source0-md5:	172ea08a66f72ea4f125b7550271d144
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake >= 1:1.9
