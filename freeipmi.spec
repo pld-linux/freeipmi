@@ -11,7 +11,7 @@ Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
 Version:	1.4.5
-Release:	1
+Release:	2
 License:	GPL v3+
 Group:		Applications/System
 Source0:	http://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
@@ -159,6 +159,12 @@ mv $RPM_BUILD_ROOT/etc/init.d/* $RPM_BUILD_ROOT/etc/rc.d/init.d
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post	-p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	-p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
 
 %post   libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
