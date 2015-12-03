@@ -10,12 +10,12 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	1.4.10
+Version:	1.5.1
 Release:	1
 License:	GPL v3+
 Group:		Applications/System
 Source0:	http://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
-# Source0-md5:	5d648fce027f4c12946b5664d28ff393
+# Source0-md5:	19794bf257820dd2ef33520f75d51d35
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake >= 1:1.9
@@ -150,7 +150,8 @@ Statyczna biblioteka FreeIPMI.
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} -j1 install \
-	DESTDIR=$RPM_BUILD_ROOT
+	DESTDIR=$RPM_BUILD_ROOT \
+	INSTALL_DAEMON_SCRIPTS="install-init-scripts install-systemd-scripts"
 
 install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
 mv $RPM_BUILD_ROOT/etc/init.d/* $RPM_BUILD_ROOT/etc/rc.d/init.d
@@ -277,7 +278,7 @@ rm -rf $RPM_BUILD_ROOT
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libfreeipmi.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libfreeipmi.so.16
+%attr(755,root,root) %ghost %{_libdir}/libfreeipmi.so.17
 %attr(755,root,root) %{_libdir}/libipmiconsole.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libipmiconsole.so.2
 %attr(755,root,root) %{_libdir}/libipmidetect.so.*.*.*
