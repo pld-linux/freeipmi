@@ -1,5 +1,5 @@
 # TODO
-#  - PLDize/register init scripts
+#  - PLDize/register init scripts, register/deregister with chkconfig
 #  - split based on provided spec.in: devel, fish, utils ?
 #    still not sure about how to split packages. move -libs to main
 #    and programs to -utils? or leave as it is? (but package init.d
@@ -19,7 +19,6 @@ Source0:	http://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake >= 1:1.9
-BuildRequires:	grep
 BuildRequires:	guile-devel
 BuildRequires:	libgcrypt-devel
 BuildRequires:	libtool
@@ -156,7 +155,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
 mv $RPM_BUILD_ROOT/etc/init.d/* $RPM_BUILD_ROOT/etc/rc.d/init.d
 # TODO: patch Makefile.am instead
-%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/doc/freeipmi
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -254,8 +253,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files bmc-watchdog
 %defattr(644,root,root,755)
-%config(noreplace) /etc/rc.d/init.d/bmc-watchdog
-%config(noreplace) /etc/sysconfig/bmc-watchdog
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/bmc-watchdog
+%attr(754,root,root) %config(noreplace) /etc/rc.d/init.d/bmc-watchdog
 %attr(755,root,root) %{_sbindir}/bmc-watchdog
 %{_mandir}/man8/bmc-watchdog.8*
 
