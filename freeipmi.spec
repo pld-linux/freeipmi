@@ -10,12 +10,12 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	1.5.1
+Version:	1.5.3
 Release:	1
 License:	GPL v3+
 Group:		Applications/System
 Source0:	http://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
-# Source0-md5:	19794bf257820dd2ef33520f75d51d35
+# Source0-md5:	9b5cee0c2f64b4ae1047fa644838b2c6
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake >= 1:1.9
@@ -141,7 +141,8 @@ Statyczna biblioteka FreeIPMI.
 %{__autoconf}
 %{__autoheader}
 %{__automake}
-%configure
+%configure \
+	--with-systemdsystemunitdir=%{systemdunitdir}
 
 %{__make}
 
@@ -153,7 +154,7 @@ rm -rf $RPM_BUILD_ROOT
 	INSTALL_DAEMON_SCRIPTS="install-init-scripts install-systemd-scripts"
 
 install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
-mv $RPM_BUILD_ROOT/etc/init.d/* $RPM_BUILD_ROOT/etc/rc.d/init.d
+%{__mv} $RPM_BUILD_ROOT/etc/init.d/* $RPM_BUILD_ROOT/etc/rc.d/init.d
 # TODO: patch Makefile.am instead
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
 
@@ -255,6 +256,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/bmc-watchdog
 %attr(754,root,root) %config(noreplace) /etc/rc.d/init.d/bmc-watchdog
+%{systemdunitdir}/bmc-watchdog.service
 %attr(755,root,root) %{_sbindir}/bmc-watchdog
 %{_mandir}/man8/bmc-watchdog.8*
 
@@ -262,6 +264,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/ipmidetectd
 %attr(754,root,root) /etc/rc.d/init.d/ipmidetectd
+%{systemdunitdir}/ipmidetectd.service
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/freeipmi/ipmidetectd.conf
 %{_mandir}/man5/ipmidetectd.conf.5*
 %{_mandir}/man8/ipmidetectd.8*
@@ -270,6 +273,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/ipmiseld
 %attr(754,root,root) /etc/rc.d/init.d/ipmiseld
+%{systemdunitdir}/ipmiseld.service
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/freeipmi/ipmiseld.conf
 %{_mandir}/man5/ipmiseld.conf.5*
 %{_mandir}/man8/ipmiseld.8*
