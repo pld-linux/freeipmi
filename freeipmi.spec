@@ -10,12 +10,12 @@
 Summary:	GNU FreeIPMI - system management software
 Summary(pl.UTF-8):	GNU FreeIPMI - oprogramowanie do zarządzania systemem
 Name:		freeipmi
-Version:	1.6.15
+Version:	1.6.17
 Release:	1
 License:	GPL v3+
 Group:		Applications/System
-Source0:	https://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
-# Source0-md5:	6e1ef02a754e0aabf5f25d83c825d7c6
+Source0:	https://ftpmirror.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
+# Source0-md5:	ff87c6782991d119eff630e3a58a602f
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.9
@@ -154,7 +154,11 @@ rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
 %{__mv} $RPM_BUILD_ROOT/etc/init.d/* $RPM_BUILD_ROOT/etc/rc.d/init.d
-# TODO: patch Makefile.am instead
+
+# obsoleted by pkg-config
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/lib{freeipmi,ipmi*}.la
+
+# packaged as %doc; TODO: patch Makefile.am instead
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
 
 %clean
@@ -279,27 +283,23 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libfreeipmi.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libfreeipmi.so.17
-%attr(755,root,root) %{_libdir}/libipmiconsole.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libipmiconsole.so.2
-%attr(755,root,root) %{_libdir}/libipmidetect.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libipmidetect.so.0
-%attr(755,root,root) %{_libdir}/libipmimonitoring.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libipmimonitoring.so.6
+%{_libdir}/libfreeipmi.so.*.*.*
+%ghost %{_libdir}/libfreeipmi.so.17
+%{_libdir}/libipmiconsole.so.*.*.*
+%ghost %{_libdir}/libipmiconsole.so.2
+%{_libdir}/libipmidetect.so.*.*.*
+%ghost %{_libdir}/libipmidetect.so.0
+%{_libdir}/libipmimonitoring.so.*.*.*
+%ghost %{_libdir}/libipmimonitoring.so.6
 %dir /var/lib/freeipmi
 /var/lib/freeipmi/ipckey
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libipmiconsole.so
-%attr(755,root,root) %{_libdir}/libfreeipmi.so
-%attr(755,root,root) %{_libdir}/libipmidetect.so
-%attr(755,root,root) %{_libdir}/libipmimonitoring.so
-%{_libdir}/libfreeipmi.la
-%{_libdir}/libipmiconsole.la
-%{_libdir}/libipmidetect.la
-%{_libdir}/libipmimonitoring.la
+%{_libdir}/libipmiconsole.so
+%{_libdir}/libfreeipmi.so
+%{_libdir}/libipmidetect.so
+%{_libdir}/libipmimonitoring.so
 %{_includedir}/freeipmi
 %{_includedir}/ipmi*.h
 %{_pkgconfigdir}/libfreeipmi.pc
