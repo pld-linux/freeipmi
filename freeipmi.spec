@@ -14,7 +14,7 @@ Version:	1.6.17
 Release:	1
 License:	GPL v3+
 Group:		Applications/System
-Source0:	https://ftpmirror.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
+Source0:	https://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
 # Source0-md5:	ff87c6782991d119eff630e3a58a602f
 URL:		http://www.gnu.org/software/freeipmi/
 BuildRequires:	autoconf >= 2.60
